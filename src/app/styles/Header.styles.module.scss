@@ -1,0 +1,492 @@
+
+
+
+
+//  // Header.styles.module.scss
+
+// //  .headerContainer {
+// //   background: #1976d2;
+// //   position: fixed;
+// //   top: 0;
+// //   left: 0;
+// //   width: 100%;
+// //   z-index: 1000;
+// //   display: flex;
+// //   align-items: center;
+// //   justify-content: space-between;
+// //   padding: 0 20px;
+// //   height: 80px;
+
+// //   @media (max-width: 768px) {
+// //     height: 60px;
+// //     padding: 0 15px;
+// //   }
+// // }
+
+// // .homLogo {
+// //   font-size: 1.5rem;
+// //   font-weight: bold;
+// //   white-space: nowrap;
+// //   color: white;
+// //   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+// //   margin-left: 7%;
+
+// //   a {
+// //     text-decoration: none;
+// //     color: inherit;
+// //   }
+
+// //   @media (max-width: 768px) {
+// //     font-size: 1.2rem;
+// //     margin-left: 4%;
+// //   }
+// // }
+
+// // .headerDiv {
+// //   display: flex;
+// //   gap: 35px;
+// //   align-items: center;
+// //   margin-right: 4%;
+
+// //   @media (max-width: 768px) {
+// //     gap: 20px;
+// //     margin-right: 6%;
+// //   }
+// // }
+
+// // .menuWrapper {
+// //   display: flex;
+// //   align-items: center;
+// //   gap: 8px;
+// //   cursor: pointer;
+// //   transition: opacity 0.2s;
+
+// //   &:hover {
+// //     opacity: 0.8;
+// //   }
+// // }
+
+// // .menuText {
+// //   font-size: 20px;
+// //   color: white;
+// //   font-weight: 500;
+// //   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+// //   @media (max-width: 768px) {
+// //     font-size: 16px;
+// //   }
+// // }
+
+// // .burgerIcon {
+// //   width: 24px;
+// //   height: 24px;
+// //   filter: brightness(0) invert(1);
+// //   cursor: pointer;
+// // }
+
+// // .sloganFixed {
+// //   position: fixed;
+// //   top: 80px;
+// //   left: 0;
+// //   width: 100%;
+// //   background-color: white;
+// //   z-index: 999;
+// //   padding: 8px 0;
+// //   margin-top: 20px;
+// //   // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+// //   @media (max-width: 768px) {
+// //     top: 60px;
+// //   }
+// // }
+
+// // .homSlogan {
+// //   max-width: 100%;
+// //   padding: 8px 16px;
+// //   text-align: center;
+// //   font-size: 0.9rem;
+// //   overflow: hidden;
+// //   font-family: "Roboto", sans-serif;
+// //   color: #1976d2;
+// //   margin: 0;
+
+// //   @media (min-width: 769px) {
+// //     font-size: 1rem;
+// //   }
+// // }
+
+// // .desktopSlogan {
+// //   display: inline;
+  
+// //   @media (max-width: 768px) {
+// //     display: none;
+// //   }
+// // }
+
+// // .mobileSlogan {
+// //   display: none;
+  
+// //   @media (max-width: 768px) {
+// //     display: inline;
+// //   }
+// // }
+
+
+
+
+
+
+
+
+//  // Header.styles.module.scss
+
+//  .headerContainer {
+//   background: #1976d2;
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   z-index: 1000;
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   padding: 0 20px;
+//   height: 80px;
+
+//   @media (max-width: 768px) {
+//     height: 60px;
+//     padding: 0 15px;
+//   }
+// }
+
+// .homLogo {
+//   font-size: 1.5rem;
+//   font-weight: bold;
+//   white-space: nowrap;
+//   color: white;
+//   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+//   margin-left: 7%;
+
+//   a {
+//     text-decoration: none;
+//     color: inherit;
+//   }
+
+//   @media (max-width: 768px) {
+//     font-size: 1.2rem;
+//     margin-left: 4%;
+//   }
+// }
+
+// .headerDiv {
+//   display: flex;
+//   gap: 35px;
+//   align-items: center;
+//   margin-right: 4%;
+
+//   @media (max-width: 768px) {
+//     gap: 20px;
+//     margin-right: 10%;
+//   }
+// }
+
+// .menuWrapper {
+//   display: flex;
+//   align-items: center;
+//   gap: 8px;
+//   cursor: pointer;
+//   transition: opacity 0.2s;
+
+//   &:hover {
+//     opacity: 0.8;
+//   }
+// }
+
+// .menuText {
+//   font-size: 20px;
+//   color: white;
+//   font-weight: 500;
+//   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+//   @media (max-width: 768px) {
+//     font-size: 16px;
+//   }
+// }
+
+// .burgerIcon {
+//   width: 24px;
+//   height: 24px;
+//   filter: brightness(0) invert(1);
+//   cursor: pointer;
+// }
+
+// // ===== СКРЫВАЕМ/ПОКАЗЫВАЕМ СЛОГАНЫ =====
+// .desktopSlogan {
+//   display: inline;
+  
+//   @media (max-width: 768px) {
+//     display: none;
+//   }
+// }
+
+// .mobileSlogan {
+//   display: none;
+  
+//   @media (max-width: 768px) {
+//     display: inline;
+//   }
+// }
+
+// // .sloganMainUa1,
+// // .sloganMainRu1 {
+// //   color: blue;
+// // }
+
+// // .withoutCommissionUa2,
+// // .withoutCommissionRu2{
+// //   color: red;
+// // }
+
+// // ===== СТИЛИ ДЛЯ МОБИЛЬНОГО СЛОГАНА =====
+// .sloganWrapperUa,
+// .sloganWrapperRu {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   text-align: center;
+//   // padding: 4px 0;
+//   // gap: 2px;
+// }
+
+// .sloganMainUa1,
+// .sloganMainRu1 {
+//   font-size: 18px;
+//   font-weight: 400;
+//   color: #2050efe6;
+//   line-height: 1.4;
+//   margin-top: 80px;
+//   font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+// }
+
+// .withoutCommissionUa2,
+// .withoutCommissionRu2 {
+//   font-size: 19px;
+//   font-weight: 600;
+//   color: #d32f2f;
+//   line-height: 1.4;
+//   font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+//   margin-top: -15px;
+// }
+
+// @media (max-width: 480px) {
+//   .sloganMainUa1,
+//   .sloganMainRu1 {
+//     font-size: 18px;
+//     font-weight: 500;
+    
+
+//   }
+  
+//   .withoutCommissionUa2,
+//   .withoutCommissionRu2 {
+//     font-size: 19px;
+   
+//   }
+// }
+
+
+
+
+
+
+
+ // Header.styles.module.scss
+
+ .headerContainer {
+  background: #1976d2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 80px;
+
+  @media (max-width: 768px) {
+    height: 60px;
+    padding: 0 15px;
+  }
+}
+
+.homLogo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+  color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-left: 7%;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+    margin-left: 4%;
+  }
+}
+
+.headerDiv {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+  margin-right: 4%;
+
+  @media (max-width: 768px) {
+    gap: 20px;
+    margin-right: 10%;
+  }
+}
+
+.menuWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.menuText {
+  font-size: 20px;
+  color: white;
+  font-weight: 500;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+.burgerIcon {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+  cursor: pointer;
+}
+
+// ===== СКРЫВАЕМ/ПОКАЗЫВАЕМ СЛОГАНЫ =====
+.desktopSlogan {
+  display: inline;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.mobileSlogan {
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: inline;
+  }
+}
+
+
+
+// ===== СТИЛИ ДЛЯ МОБИЛЬНОГО СЛОГАНА =====
+.sloganWrapperUa,
+.sloganWrapperRu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  // padding: 4px 0;
+  // gap: 2px;
+}
+
+.sloganMainUa1,
+.sloganMainRu1 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #2050efe6;
+  line-height: 1.4;
+  margin-top: 80px;
+  font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.withoutCommissionUa2,
+.withoutCommissionRu2 {
+  font-size: 19px;
+  font-weight: 600;
+  color: #d32f2f;
+  line-height: 1.4;
+  font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: -15px;
+}
+
+@media (max-width: 480px) {
+  .sloganMainUa1,
+  .sloganMainRu1 {
+    font-size: 18px;
+    font-weight: 500;
+    
+
+  }
+  
+  .withoutCommissionUa2,
+  .withoutCommissionRu2 {
+    font-size: 19px;
+   
+  }
+}
+
+
+
+
+// ===== СТИЛІ ДЛЯ ДЕСКТОП/ПЛАНШЕТ СЛОГАНА =====
+.DecSloganWrapperUa,
+.DecSloganWrapperRu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.DecSloganMainUa1,
+.DecSloganMainRu1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2050efe6;
+  line-height: 1.4;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: 120px;
+}
+
+.DecWithoutCommissionUa2,
+.DecWithoutCommissionRu2 {
+  font-size: 17px;
+  font-weight: 400;
+  color: #2050efe6;
+  line-height: 1.6;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.DecWithoutCommissionUa3,
+.DecWithoutCommissionRu3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #d32f2f;
+  line-height: 1.4;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}

@@ -1,0 +1,55 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Твои существующие настройки
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+  env: {
+    CUSTOM_KEY: 'value'
+  },
+
+  // Удаление console.log в продакшене
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
+  // Оптимизация импортов MUI
+  modularizeImports: {
+    '@mui/material': {
+      transform: '@mui/material/{{member}}',
+    },
+    '@mui/icons-material': {
+      transform: '@mui/icons-material/{{member}}',
+    },
+  },
+
+  // Experimental оптимизации
+  experimental: {
+    optimizePackageImports: [
+      '@mui/material',
+      '@mui/icons-material',
+      'lodash',
+      'date-fns',
+    ],
+    optimizeCss: true,
+  },
+
+  // Продакшен оптимизации
+  productionBrowserSourceMaps: false,
+  
+  ...(process.env.NODE_ENV === 'production' && {
+    compress: true,
+    poweredByHeader: false,
+  }),
+}
+
+module.exports = nextConfig

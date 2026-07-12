@@ -1,0 +1,15 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin/*
+Disallow: /api/*
+Disallow: /test-*
+Disallow: /resetpassword/*
+Disallow: /listings/*
+Disallow: /user-apartments/*
+
+# Host
+Host: https://nadoby.com.ua
+
+# Sitemaps
+Sitemap: https://nadoby.com.ua/sitemap.xml

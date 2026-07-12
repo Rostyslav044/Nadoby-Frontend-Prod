@@ -1,0 +1,81 @@
+
+
+// @media (max-width: 768px) {
+// .menuOverlay {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0, 0, 0, 0.8); /* Полупрозрачный темный фон */
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   z-index: 1001;
+// }
+
+// .menu {
+//   background: #fff; /* Белый фон меню */
+//   padding: 20px;
+//   // border-radius: 8px; 
+//   width: 80%; /* Ширина меню */
+//   // max-width: 600px; 
+//   /* Максимальная ширина меню */
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень для меню */
+//   overflow-y: auto; /* Прокрутка, если контент превышает высоту */
+//  margin: 0 auto;
+//  border-radius: 8px;
+// }
+
+// .menuHeader {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 20px;
+  
+// }
+// .name{
+//   font-family: "Lato",sans-serif;
+//   color: blue;
+//   // text-shadow: 0 4px 8px gold;
+// }
+// .closeButton {
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+// }
+
+// /* Локализуем селекторы */
+// .menu ul {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+// }
+
+// .menu li {
+//   margin: 10px 0;
+// }
+
+// .menuDiv {
+//   margin-top: 20px;
+//   font-weight: bold;
+//   text-align: center;
+// }
+// .languageSelector{
+//   display: flex;
+// }
+// .arrow{
+//   margin-left: 10px;
+// }
+// .languageMenu, .currencyItem{
+//   display: grid;
+//   padding: 10px 0 0 10px;
+//   gap: 10px;
+// }
+// .currencySelector{
+//   display: flex;
+  
+// }
+// }
+
+

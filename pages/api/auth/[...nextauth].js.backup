@@ -1,0 +1,108 @@
+
+
+
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+export default NextAuth({
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        try {
+          // Вызываем твой бекенд для аутентификации
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`, {
+            method: 'POST',
+            body: JSON.stringify(credentials),
+            headers: { "Content-Type": "application/json" }
+          });
+          
+          const user = await res.json();
+          
+          if (res.ok && user.success) {
+            return {
+              id: user.data._id || user.data.id,
+              email: user.data.email,
+              name: user.data.name,
+              token: user.token
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
+      }
+    })
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 дней
+  },
+  callbacks: {
+    async jwt({ token, user, account }) {
+      // Добавляем данные пользователя из твоего бекенда в JWT токен
+      if (user) {
+        token.id = user.id;
+        token.accessToken = user.token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Добавляем данные из JWT в сессию
+      session.user.id = token.id;
+      session.accessToken = token.accessToken;
+      return session;
+    },
+    async signIn({ user, account, profile }) {
+      // Для Google OAuth - регистрируем/логиним пользователя в твоем бекенде
+      if (account.provider === "google") {
+        try {
+          const userData = {
+            email: user.email,
+            name: user.name,
+            type: "google"
+          };
+
+          // Пробуем зарегистрировать или войти в твоем бекенде
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/register`, {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            headers: { "Content-Type": "application/json" }
+          });
+
+          if (!res.ok) {
+            // Если регистрация не удалась, пробуем логин
+            const loginRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`, {
+              method: 'POST',
+              body: JSON.stringify({ email: user.email, type: "google" }),
+              headers: { "Content-Type": "application/json" }
+            });
+            
+            return loginRes.ok;
+          }
+          
+          return res.ok;
+        } catch (error) {
+          console.error("Google auth error:", error);
+          return false;
+        }
+      }
+      return true;
+    }
+  },
+  pages: {
+    signIn: '/auth/signin',
+    signUp: '/auth/signup',
+  }
+});
