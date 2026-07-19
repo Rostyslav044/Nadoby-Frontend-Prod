@@ -2,9 +2,6 @@
 
 
 
-
-
-
 // Этот компонент отвечает за успешное создание объявления об аренде жилья.
 // После отправки формы он получает ответ от сервера с данными о добавленном
 // объявлении и выводит сообщение
@@ -17,9 +14,12 @@
 // import MetroSelector from '@/app/components/MetroSelector';
 // import InfoApartments from '@/app/components/InfoApartments';
 // import PreviewDialog from '@/app/components/PreviewDialog';
+// import { DISTRICTS_DATA, getCityKey, getDistrictName, isKyiv } 
+// from '@/app/components/DistrictsData';
 // import {
 //   Container, Typography, TextField, Select, MenuItem, Button,
-//   FormControl, InputLabel, Box, CircularProgress, Snackbar, Alert, Stack
+//   FormControl, InputLabel, Box, CircularProgress, Snackbar, Alert, Stack,
+//   Autocomplete as MuiAutocomplete
 // } from '@mui/material';
 // import Header from '@/app/components/Header';
 // import { Provider, useSelector } from 'react-redux';
@@ -39,7 +39,7 @@
 
 // const translations = {
 //   ua: {
-//     addTitle: 'Додати нове оголошення',
+//     addTitle: 'Додати нове оголошення-безкоштовно',
 //     editTitle: 'Редагувати оголошення',
 //     metaTitleAdd: 'Додати нове оголошення про оренду | NaDoby',
 //     metaTitleEdit: 'Редагувати оголошення про оренду | NaDoby',
@@ -80,7 +80,7 @@
 //     addressNotFound: 'Адресу не знайдено'
 //   },
 //   ru: {
-//     addTitle: 'Добавить новое объявление',
+//     addTitle: 'Добавить новое объявление-бесплатно',
 //     editTitle: 'Редактировать объявление',
 //     metaTitleAdd: 'Добавить новое объявление об аренде | NaDoby',
 //     metaTitleEdit: 'Редактировать объявление об аренде | NaDoby',
@@ -211,6 +211,7 @@
 //   const { isLoaded: isGoogleMapsLoaded, loadError: googleMapsError } = useGoogleMaps();
   
 //   const [uploadImages, setUploadImages] = useState([]);
+//   const [previewPhotos, setPreviewPhotos] = useState([]); // ДОБАВЛЕНО: для фото в предпросмотре
 //   const [formData, setFormData] = useState(initialFormData);
 //   const [errors, setErrors] = useState({});
 //   const [apartmentInfo, setApartmentInfo] = useState(initialApartmentInfo);
@@ -229,11 +230,12 @@
 //   const [isInitialized, setIsInitialized] = useState(false);
 //   const [cityInputValue, setCityInputValue] = useState('');
 //   const [streetInputValue, setStreetInputValue] = useState('');
-
+  
 //   const cityAutocompleteRef = useRef(null);
 //   const streetAutocompleteRef = useRef(null);
 //   const infoRef = useRef();
 //   const geocoderRef = useRef(null);
+//   const fileUploadSliderRef = useRef(null); // ДОБАВЛЕНО: ref для FileUploadSlider
 //   const profile = useSelector(state => state.auth.profile);
 //   const searchParams = useSearchParams();
 
@@ -695,7 +697,7 @@
 //       price: !formData.price,
 //       street: !formData.street,
 //       houseNumber: !formData.houseNumber,
-//       district: !formData.district,
+//       district: isKyiv(formData.originalCity || formData.city) ? !formData.district : false,
 //       metro: cityHasMetro && !formData.metro,
 //     };
   
@@ -703,106 +705,160 @@
 //     return !Object.values(newErrors).some(Boolean);
 //   };
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
 
-//     if (uploadImages.length < 3) {
-//       setPhotoError(true);
-//       setSnackbarMessage(t.minPhotosError);
-//       setSnackbarSeverity('error');
-//       setSnackbarOpen(true);
-//       return;
+//   // Добавь эту функцию перед handleSubmit
+// const checkAndRotatePhotosBeforeSubmit = async () => {
+//   if (!fileUploadSliderRef.current) return null;
+  
+//   const rotations = fileUploadSliderRef.current.getRotations();
+//   const hasRotations = Object.keys(rotations).some(key => rotations[key] !== 0);
+  
+//   if (hasRotations) {
+//     console.log('[AddApartmentForm] 🔄 Обнаружены повороты, сохраняем перед отправкой...');
+//     console.log('[AddApartmentForm] Rotations:', rotations);
+    
+//     const result = await fileUploadSliderRef.current.saveAllRotations();
+//     if (result && result.updatedPhotos) {
+//       const rotatedUrls = result.updatedPhotos.map(p => p.url);
+//       console.log('[AddApartmentForm] ✅ Фото повернуты:', rotatedUrls);
+//       return rotatedUrls;
 //     }
+//   }
+  
+//   return null;
+// };
 
-//     const isFormValid = validateForm();
-//     const isInfoValid = infoRef.current?.validate();
-
-//     if (!isFormValid || !isInfoValid) {
-//       setSnackbarMessage(t.errorMessage);
-//       setSnackbarSeverity('error');
-//       setSnackbarOpen(true);
-//       return;
+// const handleSubmit = async (e, customPhotos = null) => {
+//   if (e && e.preventDefault) e.preventDefault();
+  
+//   let photosToSubmit = customPhotos || uploadImages;
+  
+//   // Если нет customPhotos (прямой сабмит без предпросмотра) - проверяем повороты
+//   if (!customPhotos) {
+//     const rotatedPhotos = await checkAndRotatePhotosBeforeSubmit();
+//     if (rotatedPhotos) {
+//       photosToSubmit = rotatedPhotos;
+//       // Обновляем состояние после поворота
+//       setUploadImages(rotatedPhotos);
 //     }
+//   }
+  
+//   console.log('[AddApartmentForm] Submitting with photos:', photosToSubmit);
+  
+//   if (photosToSubmit.length < 3) {
+//     setPhotoError(true);
+//     setSnackbarMessage(t.minPhotosError);
+//     setSnackbarSeverity('error');
+//     setSnackbarOpen(true);
+//     return;
+//   }
 
-//     setIsSubmitting(true);
+//   const isFormValid = validateForm();
+//   const isInfoValid = infoRef.current?.validate();
+
+//   if (!isFormValid || !isInfoValid) {
+//     setSnackbarMessage(t.errorMessage);
+//     setSnackbarSeverity('error');
+//     setSnackbarOpen(true);
+//     return;
+//   }
+
+//   setIsSubmitting(true);
+//   try {
+//     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      
+//     const url = isEditMode 
+//       ? `${baseUrl}/api/v1/apartments/update/${apartmentId}`
+//       : `${baseUrl}/api/v1/apartments/add`;
+
+//     const method = isEditMode ? 'PUT' : 'POST';
+
+//     const response = await fetch(url, {
+//       method,
+//       headers: { 
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ 
+//         ...apartmentInfo, 
+//         ...formData, 
+//         photos: photosToSubmit,
+//         user_id: profile?._id || 'guest',
+//       }),
+//     });
+
+//     const responseText = await response.text();
+//     let responseData;
+    
 //     try {
-//       const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-        
-//       const url = isEditMode 
-//         ? `${baseUrl}/api/v1/apartments/update/${apartmentId}`
-//         : `${baseUrl}/api/v1/apartments/add`;
-
-//       const method = isEditMode ? 'PUT' : 'POST';
-
-//       const response = await fetch(url, {
-//         method,
-//         headers: { 
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ 
-//           ...apartmentInfo, 
-//           ...formData, 
-//           photos: uploadImages,
-//           user_id: profile?._id || 'guest',
-//         }),
-//       });
-
-//       const responseText = await response.text();
-//       let responseData;
-      
-//       try {
-//         responseData = JSON.parse(responseText);
-//       } catch (e) {
-//         console.error('Ошибка парсинга JSON:', e);
-//         throw new Error('Неверный формат ответа от сервера: ' + responseText);
-//       }
-
-//       if (!response.ok) {
-//         throw new Error(responseData.message || t.serverError);
-//       }
-      
-//       setSnackbarMessage(isEditMode ? t.updateMessage : t.successMessage);
-//       setSnackbarSeverity('success');
-//       setSnackbarOpen(true);
-      
-//       // Очищаем черновик при успешной отправке
-//       if (!isEditMode) {
-//         clearDraft();
-//       }
-      
-//       setTimeout(() => {
-//         router.push('/my-listings');
-//       }, 2000);
-      
-//       if (!isEditMode) {
-//         setFormData(initialFormData);
-//         setCityInputValue('');
-//         setStreetInputValue('');
-//         setUploadImages([]);
-//         setApartmentInfo(initialApartmentInfo);
-//         setSelectedLocation(null);
-//         setMapCenter({ lat: 50.4501, lng: 30.5234 });
-        
-//         if (infoRef.current?.reset) {
-//           infoRef.current.reset();
-//         }
-//       }
-      
-//     } catch (error) {
-//       console.error('Error:', error);
-//       setSnackbarMessage(error.message || t.serverError);
-//       setSnackbarSeverity('error');
-//       setSnackbarOpen(true);
-//     } finally {
-//       setIsSubmitting(false);
+//       responseData = JSON.parse(responseText);
+//     } catch (e) {
+//       console.error('Ошибка парсинга JSON:', e);
+//       throw new Error('Неверный формат ответа от сервера: ' + responseText);
 //     }
-//   };
+
+//     if (!response.ok) {
+//       throw new Error(responseData.message || t.serverError);
+//     }
+    
+//     setSnackbarMessage(isEditMode ? t.updateMessage : t.successMessage);
+//     setSnackbarSeverity('success');
+//     setSnackbarOpen(true);
+
+//     // 🔥 НОВИЙ КОД ДЛЯ ВІДСТЕЖЕННЯ КОНВЕРСІЇ
+//   // if (!isEditMode) {
+//   //   // Відправляємо подію в GA4 тільки для нових оголошень
+//   //   if (typeof window !== 'undefined' && window.gtag) {
+//   //     window.gtag('event', 'publish_listing', {
+//   //       'event_category': 'engagement',
+//   //       'event_label': 'user_published_listing',
+//   //       'value': 1
+//   //     });
+//   //     console.log('✅ Конверсія "publish_listing" відправлена в GA4');
+//   //   }
+//   // }
+    
+//     if (!isEditMode) {
+//       clearDraft();
+//     }
+    
+//     setTimeout(() => {
+//       router.push('/my-listings');
+//     }, 2000);
+    
+//     if (!isEditMode) {
+//       setFormData(initialFormData);
+//       setCityInputValue('');
+//       setStreetInputValue('');
+//       setUploadImages([]);
+//       setApartmentInfo(initialApartmentInfo);
+//       setSelectedLocation(null);
+//       setMapCenter({ lat: 50.4501, lng: 30.5234 });
+      
+//       if (infoRef.current?.reset) {
+//         infoRef.current.reset();
+//       }
+//     }
+    
+//   } catch (error) {
+//     console.error('Error:', error);
+//     setSnackbarMessage(error.message || t.serverError);
+//     setSnackbarSeverity('error');
+//     setSnackbarOpen(true);
+//   } finally {
+//     setIsSubmitting(false);
+//   }
+// };
+
+
+
 
 //   const handlePreview = () => {
+//     console.log('=== [AddApartmentForm] handlePreview called ===');
+    
 //     const isFormValid = validateForm();
 //     const isInfoValid = infoRef.current?.validate();
 //     const hasEnoughPhotos = uploadImages.length >= 3;
-
+  
 //     setPhotoError(!hasEnoughPhotos);
     
 //     if (!isFormValid || !isInfoValid || !hasEnoughPhotos) {
@@ -811,27 +867,40 @@
 //       setSnackbarOpen(true);
 //       return;
 //     }
+    
+//     // Получаем фото с углами поворота из FileUploadSlider
+//     if (fileUploadSliderRef.current) {
+//       const photosWithRotations = fileUploadSliderRef.current.getCurrentPhotos();
+//       console.log('[AddApartmentForm] Photos with rotations:', photosWithRotations);
+//       setPreviewPhotos(photosWithRotations);
+//     } else {
+//       // Если нет рефа, передаем обычные фото без поворотов
+//       setPreviewPhotos(uploadImages.map(url => ({ url, rotation: 0 })));
+//     }
+    
 //     setPreviewOpen(true);
 //   };
 
-//   const handleClosePreview = (shouldEdit) => {
+//   // ИСПРАВЛЕННАЯ функция handleClosePreview
+//   const handleClosePreview = (shouldEdit, result = {}) => {
+//     console.log('=== [AddApartmentForm] handleClosePreview ===');
+//     console.log('[AddApartmentForm] shouldEdit:', shouldEdit);
+//     console.log('[AddApartmentForm] result:', result);
+    
 //     setPreviewOpen(false);
-//     if (!shouldEdit) {
-//       handleSubmit({ preventDefault: () => {} });
+    
+//     if (!shouldEdit && result.shouldPublish) {
+//       if (result.updatedPhotos && result.updatedPhotos.length > 0) {
+//         const newPhotoUrls = result.updatedPhotos.map(p => p.url);
+//         console.log('[AddApartmentForm] Submitting with rotated photos directly:', newPhotoUrls);
+//         // Передаем фото напрямую в handleSubmit, минуя состояние
+//         handleSubmit(null, newPhotoUrls);
+//       } else {
+//         console.log('[AddApartmentForm] No updated photos, submitting with existing');
+//         handleSubmit(null, null);
+//       }
 //     }
 //   };
-
-//   // Показываем индикатор загрузки пока данные не инициализированы
-//   if (isLoading || !isInitialized) {
-//     return (
-//       <Box display="flex" justifyContent="center" alignItems="center" height="80vh" flexDirection="column">
-//         <CircularProgress size={60} />
-//         <Typography variant="h6" sx={{ mt: 2 }}>
-//           {t.loadingMessage}
-//         </Typography>
-//       </Box>
-//     );
-//   }
 
 //   // Если Google Maps не загружен
 //   if (!isGoogleMapsLoaded) {
@@ -847,18 +916,11 @@
 
 //   return (
 //     <>
-//       {/* <Head>
+//       <Head>
 //         <title>{isEditMode ? t.metaTitleEdit : t.metaTitleAdd}</title>
 //         <meta name="description" content={t.metaDescription} />
 //         <meta name="viewport" content="width=device-width, initial-scale=1" />
-//       </Head> */}
-
-// <Head>
-//   <title>{isEditMode ? t.metaTitleEdit : t.metaTitleAdd}</title>
-//   <meta name="description" content={t.metaDescription} />
-//   <meta name="viewport" content="width=device-width, initial-scale=1" />
-//   <link rel="canonical" href="https://nadoby.com.ua/add-apartment" />
-// </Head>
+//       </Head>
 
 //       <Container maxWidth="md" sx={{ 
 //         py: isMobile ? 2 : 4,
@@ -1082,26 +1144,55 @@
 //                 />
 //               </GoogleMap>
 //               <Box sx={{ mt: 1.5, mb: 0.5, py: 0.5, textAlign: 'center' }}>
-//                 <Typography variant="body2" sx={{ color: '#ff5722' }}>
+//                 <Typography variant="body2" sx={{ color: '#ff5722',
+//                fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' }
+//                }}>
 //                   {t.moveMarkerText}
 //                 </Typography>
 //               </Box>
 //             </Box>
 //           )}
 
-//           <TextField
-//             fullWidth
-//             margin="normal"
-//             size={isMobile ? "small" : "medium"}
-//             name="district"
-//             label={t.districtLabel}
-//             placeholder={t.districtLabel}
-//             value={formData.district}
-//             onChange={handleInputChange}
-//             error={!!errors.district}
-//             helperText={errors.district ? t.requiredField : ''}
-//             sx={{ maxWidth: 200, mt: 8 }}
-//           />
+//           <Box sx={{ height: '60px' }} />
+
+//           {/* Район - используем Autocomplete для Киева */}
+//           {isKyiv(formData.originalCity || formData.city) ? (
+//             <Box sx={{ maxWidth: 300, mt: 3 }}>
+//               <MuiAutocomplete
+//                 options={DISTRICTS_DATA.kyiv[currentLanguage]}
+//                 getOptionLabel={(option) => option.name}
+//                 value={DISTRICTS_DATA.kyiv[currentLanguage].find(d => d.id === formData.district) || null}
+//                 onChange={(event, newValue) => {
+//                   setFormData(prev => ({ ...prev, district: newValue ? newValue.id : '' }));
+//                   setErrors(prev => ({ ...prev, district: false }));
+//                 }}
+//                 renderInput={(params) => (
+//                   <TextField
+//                     {...params}
+//                     label={t.districtLabel}
+//                     placeholder="Виберіть район"
+//                     error={!!errors.district}
+//                     helperText={errors.district ? t.requiredField : "Виберіть район Києва"}
+//                     size={isMobile ? "small" : "medium"}
+//                   />
+//                 )}
+//                 fullWidth
+//               />
+//             </Box>
+//           ) : (
+//             <TextField
+//               fullWidth
+//               margin="normal"
+//               size={isMobile ? "small" : "medium"}
+//               name="district"
+//               label={t.districtLabel}
+//               placeholder="Район"
+//               value={formData.district}
+//               onChange={handleInputChange}
+//               error={!!errors.district}
+//               sx={{ maxWidth: 300, mt: 3 }}
+//             />
+//           )}
 
 //           <Box sx={{ 
 //             mt: 3, 
@@ -1109,10 +1200,12 @@
 //             border: photoError ? '1px solid red' : 'none'
 //           }}>
 //             <FileUploadSlider 
+//               ref={fileUploadSliderRef}
 //               photos={uploadImages}
 //               setUploadImages={setUploadImages}
 //               editable={true}
 //               onPhotosChange={(newPhotos) => {
+//                 console.log('[AddApartmentForm] onPhotosChange called, newPhotos count:', newPhotos);
 //                 setPhotoError(newPhotos.length < 3);
 //               }}
 //             />
@@ -1149,7 +1242,7 @@
 //           open={previewOpen}
 //           onClose={handleClosePreview}
 //           formData={formData}
-//           uploudImages={uploadImages}
+//           uploudImages={previewPhotos}
 //           apartmentInfo={apartmentInfo}
 //           photoError={photoError}
 //         />
@@ -1186,6 +1279,7 @@
 
 
 
+
 // Этот компонент отвечает за успешное создание объявления об аренде жилья.
 // После отправки формы он получает ответ от сервера с данными о добавленном
 // объявлении и выводит сообщение
@@ -1211,15 +1305,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { store } from '@/app/store';
 import Head from 'next/head';
 import LoadingIndicator from '@/app/components/LoadingIndicator';
-
-// Динамически импортируем Google Maps только на клиенте
-let GoogleMap, Marker, Autocomplete;
-if (typeof window !== 'undefined') {
-  const googleMapsLib = require('@react-google-maps/api');
-  GoogleMap = googleMapsLib.GoogleMap;
-  Marker = googleMapsLib.Marker;
-  Autocomplete = googleMapsLib.Autocomplete;
-}
 
 const translations = {
   ua: {
@@ -1394,6 +1479,33 @@ function AddApartmentForm() {
   const router = useRouter();
   const { isLoaded: isGoogleMapsLoaded, loadError: googleMapsError } = useGoogleMaps();
   
+  // Динамічний імпорт Google Maps тільки на клієнті
+  const [googleMapsComponents, setGoogleMapsComponents] = useState({
+    GoogleMap: null,
+    Marker: null,
+    Autocomplete: null
+  });
+  const [isMapsLoaded, setIsMapsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isGoogleMapsLoaded) {
+      const loadGoogleMapsComponents = async () => {
+        try {
+          const googleMapsLib = await import('@react-google-maps/api');
+          setGoogleMapsComponents({
+            GoogleMap: googleMapsLib.GoogleMap,
+            Marker: googleMapsLib.Marker,
+            Autocomplete: googleMapsLib.Autocomplete
+          });
+          setIsMapsLoaded(true);
+        } catch (error) {
+          console.error('Помилка завантаження Google Maps компонентів:', error);
+        }
+      };
+      loadGoogleMapsComponents();
+    }
+  }, [isGoogleMapsLoaded]);
+
   const [uploadImages, setUploadImages] = useState([]);
   const [previewPhotos, setPreviewPhotos] = useState([]); // ДОБАВЛЕНО: для фото в предпросмотре
   const [formData, setFormData] = useState(initialFormData);
@@ -1987,13 +2099,27 @@ const handleSubmit = async (e, customPhotos = null) => {
     setSnackbarMessage(isEditMode ? t.updateMessage : t.successMessage);
     setSnackbarSeverity('success');
     setSnackbarOpen(true);
+
+    // 🔥 НОВИЙ КОД ДЛЯ ВІДСТЕЖЕННЯ КОНВЕРСІЇ
+  if (!isEditMode) {
+    // Відправляємо подію в GA4 тільки для нових оголошень
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'publish_listing', {
+        'event_category': 'engagement',
+        'event_label': 'user_published_listing',
+        'value': 1
+      });
+      console.log('✅ Конверсія "publish_listing" відправлена в GA4');
+    }
+  }
     
     if (!isEditMode) {
       clearDraft();
     }
     
     setTimeout(() => {
-      router.push('/my-listings');
+      // router.push('/my-listings');
+      router.push('/my-listings?created=true');
     }, 2000);
     
     if (!isEditMode) {
@@ -2155,8 +2281,8 @@ const handleSubmit = async (e, customPhotos = null) => {
             <Typography variant="body2" sx={{ mb: 1, color: 'rgba(0, 0, 0, 0.6)' }}>
               {t.cityLabel}
             </Typography>
-            {isGoogleMapsLoaded && (
-              <Autocomplete
+            {isGoogleMapsLoaded && googleMapsComponents.Autocomplete && (
+              <googleMapsComponents.Autocomplete
                 onLoad={(autocomplete) => {
                   cityAutocompleteRef.current = autocomplete;
                 }}
@@ -2177,7 +2303,7 @@ const handleSubmit = async (e, customPhotos = null) => {
                   error={!!errors.city}
                   helperText={errors.city ? t.requiredField : ''}
                 />
-              </Autocomplete>
+              </googleMapsComponents.Autocomplete>
             )}
           </Box>
 
@@ -2196,8 +2322,8 @@ const handleSubmit = async (e, customPhotos = null) => {
                 <Typography variant="body2" sx={{ mb: 1, color: 'rgba(0, 0, 0, 0.6)' }}>
                   {t.streetLabel}
                 </Typography>
-                {isGoogleMapsLoaded && (
-                  <Autocomplete
+                {isGoogleMapsLoaded && googleMapsComponents.Autocomplete && (
+                  <googleMapsComponents.Autocomplete
                     onLoad={(autocomplete) => {
                       streetAutocompleteRef.current = autocomplete;
                     }}
@@ -2218,7 +2344,7 @@ const handleSubmit = async (e, customPhotos = null) => {
                       error={!!errors.street}
                       helperText={errors.street ? t.requiredField : ''}
                     />
-                  </Autocomplete>
+                  </googleMapsComponents.Autocomplete>
                 )}
                 <Button
                   variant="text"
@@ -2296,14 +2422,14 @@ const handleSubmit = async (e, customPhotos = null) => {
             </Box>
           </Box>
 
-          {selectedLocation && isGoogleMapsLoaded && GoogleMap && (
+          {selectedLocation && isGoogleMapsLoaded && googleMapsComponents.GoogleMap && (
             <Box sx={{ height: '300px', width: '100%', mt: 2 }}>
-              <GoogleMap
+              <googleMapsComponents.GoogleMap
                 mapContainerStyle={{ width: '100%', height: '100%' }}
                 center={mapCenter}
                 zoom={17}
               >
-                <Marker
+                <googleMapsComponents.Marker
                   position={selectedLocation}
                   draggable
                   onDragEnd={(e) => {
@@ -2313,7 +2439,7 @@ const handleSubmit = async (e, customPhotos = null) => {
                     });
                   }}
                 />
-              </GoogleMap>
+              </googleMapsComponents.GoogleMap>
               <Box sx={{ mt: 1.5, mb: 0.5, py: 0.5, textAlign: 'center' }}>
                 <Typography variant="body2" sx={{ color: '#ff5722',
                fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' }

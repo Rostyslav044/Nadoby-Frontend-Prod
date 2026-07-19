@@ -5029,6 +5029,24 @@ const UserMenu = () => {
     }
   }, [openCurrency, fetchExchangeRates]);
 
+    // Предзагрузка страниц при открытии меню (для авторизованных)
+    useEffect(() => {
+      if (isMenuOpen) {
+        const pagesToPrefetch = [
+          '/my-profile',
+          '/my-listings',
+          '/add-apartment',
+          '/kyiv-apartments',
+          '/favorites',
+          '/rental-terms',
+          '/blog'
+        ];
+        pagesToPrefetch.forEach(page => {
+          router.prefetch(page);
+        });
+      }
+    }, [isMenuOpen, router]);
+
   // Обновляем результаты конвертации
   useEffect(() => {
     if (converterAmount && !isNaN(parseFloat(converterAmount))) {

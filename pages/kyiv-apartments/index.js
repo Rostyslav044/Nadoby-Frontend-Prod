@@ -2343,7 +2343,7 @@ function KyivApartmentsContent({ apartments = [], totalCount = 0, initialFilter 
       fontWeight: 600, 
       mb: { xs: 2, md: 3 } 
     }}>
-      {currentLanguage === 'ua' ? 'Квартири по районах Києва' : 'Квартиры по районам Киева'}
+      {currentLanguage === 'ua' ? 'Детальна інформація по районах Києва' : 'Детальная информацмя по районам Киева'}
     </Typography>
     
     <Grid container spacing={{ xs: 1, sm: 1.5, md: 2 }}>
@@ -2392,7 +2392,7 @@ function KyivApartmentsContent({ apartments = [], totalCount = 0, initialFilter 
       fontWeight: 600, 
       mb: { xs: 2, md: 3 } 
     }}>
-      {currentLanguage === 'ua' ? 'Детальна інформація по станціях метро' : 'Детальная информация по станциям метро'}
+      {currentLanguage === 'ua' ? 'Детальна інформація по станціях метро Києва' : 'Детальная информация по станциям метро Киева'}
     </Typography>
     
     <Grid container spacing={{ xs: 1, sm: 1.5, md: 2 }}>
@@ -2400,6 +2400,9 @@ function KyivApartmentsContent({ apartments = [], totalCount = 0, initialFilter 
         { slug: 'vokzalna', nameUa: 'Вокзальна', nameRu: 'Вокзальная' },
         { slug: 'khreshchatyk', nameUa: 'Хрещатик', nameRu: 'Крещатик' },
         { slug: 'poznyaky', nameUa: 'Позняки', nameRu: 'Позняки' },
+        { slug: 'libidska', nameUa: 'Либідська', nameRu: 'Лыбедская' },
+        { slug: 'pecherska', nameUa: 'Печерська', nameRu: 'Печерская' },
+        { slug: 'obolon', nameUa: 'Оболонь', nameRu: 'Оболонь' },
       ].map((metro) => (
         <Grid item xs={6} sm={4} md={2} key={metro.slug}>
           <Link href={`/kyiv-apartments/metro/${metro.slug}`} passHref legacyBehavior>

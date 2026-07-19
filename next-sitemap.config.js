@@ -4,181 +4,6 @@
 
 // next-sitemap.config.js
 
-// const fs = require('fs');
-// const path = require('path');
-
-// /** @type {import('next-sitemap').IConfig} */
-// module.exports = {
-//   siteUrl: 'https://nadoby.com.ua',
-//   generateRobotsTxt: true,
-//   robotsTxtOptions: {
-//     policies: [
-//       {
-//         userAgent: '*',
-//         allow: '/',
-//         disallow: ['/admin/*', '/api/*', '/test-*', '/resetpassword/*', '/listings/*', '/user-apartments/*'],
-//       },
-//     ],
-//   },
-  
-//   additionalPaths: async (config) => {
-//     const paths = []; 
-    
-//     console.log('🔄 Начинаем генерацию динамических страниц для sitemap...');
-    
-//     // ========== ЧИТАЕМ ID ИЗ ФАЙЛА (создается скриптом update-ids) ==========
-//     const idsFilePath = path.join(process.cwd(), '.apartment-ids.json');
-//     let apartmentIds = [];
-    
-//     if (fs.existsSync(idsFilePath)) {
-//       try {
-//         const idsData = fs.readFileSync(idsFilePath, 'utf8');
-//         apartmentIds = JSON.parse(idsData);
-//         console.log(`✅ Загружено ${apartmentIds.length} ID объявлений из файла .apartment-ids.json`);
-//       } catch (err) {
-//         console.error('❌ Ошибка чтения файла с ID:', err.message);
-//       }
-//     } else {
-//       console.log('⚠️ Файл .apartment-ids.json не найден');
-//       console.log('💡 Запустите: npm run update-ids');
-//     }
-    
-//     // Добавляем страницы объявлений
-//     if (apartmentIds.length > 0) {
-//       console.log(`🏠 Добавляем ${apartmentIds.length} страниц объявлений...`);
-      
-//       apartmentIds.forEach(id => {
-//         paths.push({
-//           loc: `/apartment/${id}`,
-//           lastmod: new Date().toISOString(),
-//           changefreq: 'daily',
-//           priority: 0.8,
-//         });
-//       });
-      
-//       console.log(`✅ Добавлено ${paths.filter(p => p.loc.startsWith('/apartment/')).length} страниц объявлений`);
-//     } else {
-//       console.log('⚠️ Нет ID объявлений для добавления');
-//     }
-    
-//     // Добавляем районы и фильтры
-//     const staticPaths = getStaticPaths();
-//     return [...paths, ...staticPaths];
-//   },
-  
-//   transform: (config, url) => {
-//     if (url === 'https://nadoby.com.ua') {
-//       return {
-//         loc: url,
-//         changefreq: 'daily',
-//         priority: 1.0,
-//         lastmod: new Date().toISOString(),
-//       };
-//     }
-    
-//     if (url.includes('/kyiv-apartments')) {
-//       return {
-//         loc: url,
-//         changefreq: 'daily',
-//         priority: 0.9,
-//         lastmod: new Date().toISOString(),
-//       };
-//     }
-    
-//     if (url.includes('/blog')) {
-//       return {
-//         loc: url,
-//         changefreq: 'weekly',
-//         priority: 0.6,
-//         lastmod: new Date().toISOString(),
-//       };
-//     }
-    
-//     return {
-//       loc: url,
-//       changefreq: 'daily',
-//       priority: 0.7,
-//       lastmod: new Date().toISOString(),
-//     };
-//   },
-  
-//   exclude: [
-//     '/admin/*',
-//     '/api/*',
-//     '/test-*',
-//     '/resetpassword/*',
-//     '/listings/*',
-//     '/user-apartments/*',
-//     '/blog/blogData',
-//     '/blog/components/*',
-//   ],
-  
-//   output: 'standalone',
-//   generateIndexSitemap: true,
-// };
-
-// // Функция для статических путей (районы + фильтры)
-// function getStaticPaths() {
-//   const paths = [];
-  
-//   // ========== СТРАНИЦЫ РАЙОНОВ ==========
-//   const districts = [
-//     { slug: 'pechersk', name: 'Печерск', priority: 0.9 },
-//     { slug: 'obolon', name: 'Оболонь', priority: 0.85 },
-//     { slug: 'golosiyivsky', name: 'Голосеевский', priority: 0.85 },
-//     { slug: 'darnytsia', name: 'Дарница', priority: 0.8 },
-//     { slug: 'shevchenkivsky', name: 'Шевченковский', priority: 0.85 }, 
-//     { slug: 'sviatoshyn', name: 'Святошин', priority: 0.8 }, 
-//     { slug: 'podil', name: 'Подол', priority: 0.85 },
-//     { slug: 'solomyanskyi', name: 'Соломенский', priority: 0.85 }, 
-//     { slug: 'desnianskyi', name: 'Деснянский', priority: 0.8 },
-//     { slug: 'dniprovskyi', name: 'Днепровский', priority: 0.8 },
-//     { slug: 'kyiv_region', name: 'Киевская область', priority: 0.85 },
-//   ];
-  
-//   console.log(`🏘️ Добавляем ${districts.length} страниц районов...`);
-  
-//   districts.forEach(district => {
-//     paths.push({
-//       loc: `/kyiv-apartments/district/${district.slug}`,
-//       lastmod: new Date().toISOString(),
-//       changefreq: 'daily',
-//       priority: district.priority,
-//     });
-//   });
-  
-//   // ========== СТРАНИЦЫ ФИЛЬТРОВ ==========
-//   const filters = [
-//     { slug: '1-komnata', name: '1-комнатные', priority: 0.7 },
-//     { slug: '2-komnaty', name: '2-комнатные', priority: 0.7 },
-//     { slug: '3-komnaty', name: '3-комнатные', priority: 0.7 },
-//     { slug: '4-plus', name: '4+ комнатные', priority: 0.65 },
-//     { slug: 'posutochno', name: 'Посуточно', priority: 0.6 },
-//     { slug: 'centr', name: 'Центр', priority: 0.75 },
-//     { slug: 'levyy-bereg', name: 'Левый берег', priority: 0.7 },
-//     { slug: 'pravyy-bereg', name: 'Правый берег', priority: 0.7 },
-//   ];
-  
-//   console.log(`🔍 Добавляем ${filters.length} страниц фильтров...`);
-  
-//   filters.forEach(filter => {
-//     paths.push({
-//       loc: `/kyiv-apartments/${filter.slug}`,
-//       lastmod: new Date().toISOString(),
-//       changefreq: 'weekly',
-//       priority: filter.priority,
-//     });
-//   });
-  
-//   console.log(`📊 Статические пути: ${paths.length} страниц (районы + фильтры)`);
-  
-//   return paths;
-// }
-
-
-
-// next-sitemap.config.js
-
 const fs = require('fs');
 const path = require('path');
 
@@ -327,6 +152,11 @@ function getStaticPaths() {
     { slug: 'vokzalna', name: 'Вокзальная', priority: 0.9 },
     { slug: 'khreshchatyk', name: 'Крещатик', priority: 0.9 },
     { slug: 'poznyaky', name: 'Позняки', priority: 0.85 },
+      // ===== НОВЫЕ СТАНЦИИ МЕТРО =====
+  { slug: 'libidska', name: 'Лыбедская', priority: 0.85 },
+  { slug: 'pecherska', name: 'Печерская', priority: 0.9 },
+  { slug: 'obolon', name: 'Оболонь', priority: 0.85 },
+
     // TODO: Добавить остальные станции метро
     // { slug: 'akademmistechko', name: 'Академгородок', priority: 0.8 },
     // { slug: 'zhytomyrska', name: 'Житомирская', priority: 0.8 },
@@ -412,6 +242,14 @@ function getStaticPaths() {
       priority: filter.priority,
     });
   });
+
+    // ✅ ДОБАВЛЯЕМ СТРАНИЦУ /rozmistyty-ogoloshennya ВРУЧНУЮ
+    paths.push({
+      loc: '/rozmistyty-ogoloshennya',
+      lastmod: new Date().toISOString(),
+      changefreq: 'weekly',
+      priority: 0.9,
+    });
   
   console.log(`📊 Статические пути: ${paths.length} страниц (районы + метро + фильтры)`);
   

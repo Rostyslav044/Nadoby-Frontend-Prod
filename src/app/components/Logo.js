@@ -34,7 +34,7 @@ const HomLogo = styled(Typography)({
 const Logo = () => {
   return (
     <LogoContainer>
-      <HomLogo variant="h1">NaDoby.com.ua</HomLogo>
+      <HomLogo variant="h6">NaDoby.com.ua</HomLogo>
     </LogoContainer>
   );
 };

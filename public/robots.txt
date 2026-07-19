@@ -13,3 +13,6 @@ Host: https://nadoby.com.ua
 
 # Sitemaps
 Sitemap: https://nadoby.com.ua/sitemap.xml
+# AI-индексация (LLMs.txt)
+Allow: /llms.txt
+Allow: /llms-ru.txt

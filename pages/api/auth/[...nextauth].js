@@ -23,7 +23,7 @@ export default NextAuth({
     strategy: "jwt",
   },
   
-  debug: true,
+  debug: false,
   
   callbacks: {
     async signIn({ user, account }) {

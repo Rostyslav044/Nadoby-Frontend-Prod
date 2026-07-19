@@ -3586,6 +3586,20 @@ const NoAutorazeMenu = () => {
     }
   }, [openCurrency, fetchExchangeRates]);
 
+    // Предзагрузка страниц при открытии меню
+    useEffect(() => {
+      if (isMenuOpen) {
+        const pagesToPrefetch = [
+          '/kyiv-apartments',
+          '/rental-terms',
+          '/blog'
+        ];
+        pagesToPrefetch.forEach(page => {
+          router.prefetch(page);
+        });
+      }
+    }, [isMenuOpen, router]);
+
   // Обновляем результаты конвертации
   useEffect(() => {
     if (converterAmount && !isNaN(parseFloat(converterAmount))) {
