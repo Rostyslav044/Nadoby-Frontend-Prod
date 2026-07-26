@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start --port 3001",
     "lint": "next lint",
-    "update-ids": "node scripts/update-apartment-ids.js",
-    "postbuild": "npm run update-ids && next-sitemap"
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -43,6 +42,7 @@
     "critters": "^0.0.23",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
+    "mongodb": "^7.5.0",
     "sharp": "^0.34.5"
   }
 }

@@ -2359,6 +2359,7 @@ function KyivApartmentsContent({ apartments = [], totalCount = 0, initialFilter 
         { slug: 'desnianskyi', nameUa: 'Деснянський', nameRu: 'Деснянский' },
         { slug: 'dniprovskyi', nameUa: 'Дніпровський', nameRu: 'Днепровский' },
         { slug: 'kyiv_region', nameUa: 'Київська область', nameRu: 'Киевская область' },
+
       ].map((district) => (
         <Grid item xs={6} sm={4} md={2} key={district.slug}>
           <Link href={`/kyiv-apartments/district/${district.slug}`} passHref legacyBehavior>
@@ -2403,6 +2404,9 @@ function KyivApartmentsContent({ apartments = [], totalCount = 0, initialFilter 
         { slug: 'libidska', nameUa: 'Либідська', nameRu: 'Лыбедская' },
         { slug: 'pecherska', nameUa: 'Печерська', nameRu: 'Печерская' },
         { slug: 'obolon', nameUa: 'Оболонь', nameRu: 'Оболонь' },
+        { slug: 'demiyivska', nameUa: 'Деміївська', nameRu: 'Демиевская' },
+        { slug: 'vydubychi', nameUa: 'Видубичі', nameRu: 'Выдубичи' },
+        { slug: 'slavutych', nameUa: 'Славутич', nameRu: 'Славутич' },
       ].map((metro) => (
         <Grid item xs={6} sm={4} md={2} key={metro.slug}>
           <Link href={`/kyiv-apartments/metro/${metro.slug}`} passHref legacyBehavior>

@@ -1,10 +1,6 @@
 
 
 
-
-
-
-
 // // FileUploadSlider.jsx - ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ ВЕРСИЯ С ЛОГАМИ
 
 // 'use client';
@@ -29,6 +25,7 @@
 // } from '@mui/material';
 // import { useSwipeable } from 'react-swipeable';
 // import { useSelector } from 'react-redux';
+// import axios from 'axios';
 
 // // Динамический импорт CreateUser
 // import dynamic from 'next/dynamic';
@@ -1419,8 +1416,9 @@
 //               bgcolor: '#f5f5f5',
 //               borderRadius: 1,
 //             }}>
+//             { /* c Владимиром */}
 //               {getPhones().map((phone, index) => (
-//                 <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+//                 <Box onClick={()=> {axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/stats/${apartmentId}/phone-click`)}} key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
 //                   <IconButton 
 //                     sx={{ p: 0.5, color: 'primary.main' }}
 //                     onClick={() => window.open(`tel:${phone.replace(/\D/g, '')}`)}
@@ -1607,7 +1605,7 @@
 //                     src={photo.url}
 //                     alt={`${currentLanguage === 'ua' ? 'Фото' : 'Фото'} ${index + 1}`}
 //                     style={{ 
-//                       objectFit: 'contain',
+//                       objectFit: 'cover',
 //                       width: '100%',
 //                       height: '100%'
 //                     }}
@@ -1749,7 +1747,8 @@
 // export default FileUploadSlider;
 
 
-// FileUploadSlider.jsx - ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ ВЕРСИЯ С ЛОГАМИ
+
+// FileUploadSlider.jsx - ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ ВЕРСИЯ С БЫСТРОЙ ЗАГРУЗКОЙ
 
 'use client';
 
@@ -1810,7 +1809,7 @@ const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
-// Функция для добавления водяного знака
+// Функция для добавления водяного знака СМЕЩЕН ВПРАВО
 const addWatermarkToImage = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1835,7 +1834,7 @@ const addWatermarkToImage = (file) => {
         ctx.textBaseline = 'bottom';
         
         const watermarkText = 'NaDoby.com.ua';
-        const x = paddingHorizontal;
+        const x = paddingHorizontal; 
         const y = canvas.height - paddingVertical;
         
         ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
@@ -1864,7 +1863,7 @@ const addWatermarkToImage = (file) => {
           );
           
           resolve(watermarkedFile);
-        }, file.type, 0.92);
+        }, file.type, 0.95);
       };
       
       img.onerror = () => reject(new Error('Ошибка загрузки изображения'));
@@ -2813,7 +2812,7 @@ ${currentLanguage === 'ua' ? 'Повідомлення' : 'Сообщение'}:
                     onClick={() => handleSetMainPhoto(currentIndex)}
                     sx={{
                       position: 'absolute',
-                      top: isMobile ? 62 : 52,    // ← уменьшили для мобильных
+                      top: isMobile ? 62 : 52,
                       right: isMobile ? 10 : 10,
                       bgcolor: 'primary.main',
                       color: 'white',
@@ -2831,7 +2830,7 @@ ${currentLanguage === 'ua' ? 'Повідомлення' : 'Сообщение'}:
                   onClick={() => handleRotatePhoto(localPhotos[currentIndex]?.id, 'left')}
                   sx={{
                     position: 'absolute',
-                    top: isMobile ? 183 : 94,      // ← подняли для мобильных (было 94, стало 76)
+                    top: isMobile ? 183 : 94,
                     right: isMobile ? 10 : 10,
                     bgcolor: 'warning.main',
                     color: 'white',
@@ -2848,7 +2847,7 @@ ${currentLanguage === 'ua' ? 'Повідомлення' : 'Сообщение'}:
                   onClick={() => handleRotatePhoto(localPhotos[currentIndex]?.id, 'right')}
                   sx={{
                     position: 'absolute',
-                    top: isMobile ? 222 : 136,    // ← подняли для мобильных (было 136, стало 110)
+                    top: isMobile ? 222 : 136,
                     right: isMobile ? 10 : 10,
                     bgcolor: 'warning.main',
                     color: 'white',
@@ -3164,7 +3163,6 @@ ${currentLanguage === 'ua' ? 'Повідомлення' : 'Сообщение'}:
               bgcolor: '#f5f5f5',
               borderRadius: 1,
             }}>
-            { /* c Владимиром */}
               {getPhones().map((phone, index) => (
                 <Box onClick={()=> {axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/stats/${apartmentId}/phone-click`)}} key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <IconButton 
@@ -3353,7 +3351,7 @@ ${currentLanguage === 'ua' ? 'Повідомлення' : 'Сообщение'}:
                     src={photo.url}
                     alt={`${currentLanguage === 'ua' ? 'Фото' : 'Фото'} ${index + 1}`}
                     style={{ 
-                      objectFit: 'cover',
+                      objectFit: 'contain',
                       width: '100%',
                       height: '100%'
                     }}

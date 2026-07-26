@@ -94,7 +94,7 @@ import Link from "next/link";
 
 const translations = {
   ua: {
-    // menu: "Меню",
+    menu: "Меню",
     slogan: (
       <div className={styles.DecSloganWrapperUa}>
         <span className={styles.DecSloganMainUa1}>Подобова оренда житла в Україні.</span>
@@ -116,7 +116,7 @@ const translations = {
     )
   },
   ru: {
-    // menu: "Меню",
+    menu: "Меню",
     slogan: (
       <div className={styles.DecSloganWrapperRu}>
         <span className={styles.DecSloganMainRu1}>Посуточная аренда жилья в Украине.</span>
@@ -142,7 +142,15 @@ const translations = {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { currentLanguage } = useLanguage();
-  const toggleMenu = () => setIsMenuOpen(prev => !prev);
+  
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setIsMenuOpen(prev => !prev);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
     <>
@@ -154,9 +162,9 @@ export default function Header() {
         <div className={styles.headerDiv}>
           <div 
             className={styles.menuWrapper}
-            onClick={toggleMenu}
+            onMouseDown={toggleMenu}
           >
-            <span className={styles.menuText}>{translations[currentLanguage].menu}</span>
+            {/* <span className={styles.menuText}>{translations[currentLanguage].menu}</span> */}
             <Image
               src="/burger.svg"
               alt="Меню"
@@ -179,7 +187,7 @@ export default function Header() {
         </p>
       </div>
 
-      {isMenuOpen && <Menu />}
+      {isMenuOpen && <Menu onClose={closeMenu} />}
     </>
   );
 }
